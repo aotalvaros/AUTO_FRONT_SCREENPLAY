@@ -1,0 +1,145 @@
+# AUTO_FRONT_SCREENPLAY - CyberGuard System
+
+Automatización de pruebas Front-End para **CyberGuard System** utilizando el patrón **Screenplay** con **Serenity BDD**.
+
+---
+
+## Descripción
+
+Este proyecto valida el flujo de gestión de amenazas de la plataforma CyberGuard System mediante dos escenarios independientes, distintos a los cubiertos por el proyecto POM:
+
+| # | Escenario | Tipo |
+|---|-----------|------|
+| 1 | Reporte exitoso de una amenaza con datos válidos | Positivo |
+| 2 | Intento fallido de reporte con campos obligatorios vacíos | Negativo |
+
+---
+
+## Arquitectura
+
+```
+AUTO_FRONT_SCREENPLAY/
+├── build.gradle
+├── settings.gradle
+├── gradlew
+├── gradle/wrapper/
+└── src/
+    └── test/
+        ├── java/com/cyberguard/automation/
+        │   ├── hooks/           ← Configuración Before/After (WebDriver lifecycle)
+        │   ├── questions/       ← Preguntas (estado observable de la UI)
+        │   ├── runners/         ← @Suite JUnit Platform
+        │   ├── stepdefinitions/ ← Glue Cucumber ↔ Screenplay
+        │   ├── tasks/           ← Tareas de negocio (SRP por clase)
+        │   ├── ui/              ← Targets (localizadores de elementos)
+        │   └── util/            ← Constantes y helpers
+        └── resources/
+            ├── features/
+            │   └── registro.feature
+            ├── serenity.conf    ← Configuración del driver
+            └── cucumber.properties
+```
+
+### Patrón utilizado
+
+**Screenplay:** Organiza la automatización en torno a **Actores** que poseen **Habilidades** (abilities), ejecutan **Tareas** (tasks) compuestas de **Acciones** atómicas (interactions) y responden **Preguntas** (questions) sobre el estado del sistema. Cada `Task` aplica el principio de responsabilidad única (SRP).
+
+| Componente | Responsabilidad |
+|------------|----------------|
+| `Actor` | Sujeto que ejecuta el flujo |
+| `Task` | Objetivo de negocio (ej. `ReportarAmenaza`) |
+| `Interaction` | Acción atómica de UI (click, type) |
+| `Question` | Consulta observable del estado de la UI |
+| `Target` | Localizador de elemento web (en `ui/`) |
+
+---
+
+## Stack Tecnológico
+
+| Herramienta | Versión |
+|-------------|---------|
+| Java | 17 (OpenJDK) |
+| Gradle | 8.12 |
+| Serenity BDD | 4.2.12 |
+| Serenity Screenplay | 4.2.12 |
+| Serenity Screenplay WebDriver | 4.2.12 |
+| Serenity Gradle Plugin | 5.3.7 |
+| Cucumber | 7.20.1 |
+| WebDriver | Chrome (autodownload) |
+| IDE | VS Code / IntelliJ IDEA |
+| AI Assistant | GitHub Copilot |
+
+---
+
+## Prerequisitos
+
+- **Java JDK 17+** instalado y configurado en `JAVA_HOME`
+- **Google Chrome** instalado (el driver se descarga automáticamente)
+- **CyberGuard System** corriendo localmente:
+  ```bash
+  cd cyberguard-system
+  sudo docker compose up --build
+  ```
+  Verificar que el frontend esté disponible en `http://localhost:4200`
+
+---
+
+## Instalación
+
+1. Clonar el repositorio:
+   ```bash
+   git clone <repo-url>
+   cd AUTO_FRONT_SCREENPLAY
+   ```
+
+2. Verificar que Gradle Wrapper esté disponible:
+   ```bash
+   ./gradlew --version
+   ```
+
+---
+
+## Ejecución de Tests
+
+### Ejecutar todos los tests y generar reporte
+```bash
+./gradlew clean test aggregate
+```
+
+### Ejecutar por tag específico
+```bash
+./gradlew clean test aggregate -Dcucumber.filter.tags="@positivo"
+```
+
+### Abrir el reporte Serenity (Linux)
+```bash
+xdg-open target/site/serenity/index.html
+```
+
+---
+
+## Reportes
+
+Tras la ejecución, Serenity BDD genera un reporte HTML detallado en:
+
+```
+target/site/serenity/index.html
+```
+
+El reporte incluye:
+- Resultado de cada escenario (passed / failed / error)
+- Capturas de pantalla por paso
+- Tiempo de ejecución por escenario y tarea
+- Detalle completo de interacciones de cada Actor con la UI
+
+---
+
+## Escenarios cubiertos
+
+> Estos escenarios son **independientes entre sí** y distintos de los automatizados con POM (que cubren autenticación/login).
+
+### Escenario 1 — Positivo: Reporte exitoso de una amenaza
+Valida que un analista autenticado puede registrar una amenaza con tipo, severidad y descripción válidos, y que el sistema confirma el registro mostrándola en el dashboard.
+
+### Escenario 2 — Negativo: Intento fallido con campos vacíos
+Valida que al intentar enviar el formulario de reporte sin completar los campos obligatorios, el sistema muestra los mensajes de validación correspondientes y no procesa el reporte.
