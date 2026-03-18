@@ -26,17 +26,31 @@ AUTO_FRONT_SCREENPLAY/
 └── src/
     └── test/
         ├── java/com/cyberguard/automation/
-        │   ├── hooks/           ← Configuración Before/After (WebDriver lifecycle)
-        │   ├── questions/       ← Preguntas (estado observable de la UI)
-        │   ├── runners/         ← @Suite JUnit Platform
-        │   ├── stepdefinitions/ ← Glue Cucumber ↔ Screenplay
-        │   ├── tasks/           ← Tareas de negocio (SRP por clase)
-        │   ├── ui/              ← Targets (localizadores de elementos)
-        │   └── util/            ← Constantes y helpers
+        │   ├── hooks/
+        │   │   └── ScreenplayHooks.java           ← Setup OnStage / OnlineCast
+        │   ├── questions/
+        │   │   ├── AlertsVisible.java             ← ¿Hay alertas en el dashboard?
+        │   │   ├── SuccessMessage.java            ← ¿Se muestra mensaje de éxito?
+        │   │   └── ValidationMessages.java        ← ¿Se muestran errores de validación?
+        │   ├── runners/
+        │   │   └── RegistroAmenazaRunner.java     ← @Suite JUnit Platform
+        │   ├── stepdefinitions/
+        │   │   └── RegistroAmenazaStepDefinitions.java
+        │   ├── tasks/
+        │   │   ├── Authenticate.java              ← Ingresar credenciales y hacer login
+        │   │   ├── ReportThreat.java              ← Llenar y enviar formulario de amenaza
+        │   │   └── SubmitEmptyThreatForm.java     ← Enviar formulario sin datos
+        │   ├── ui/
+        │   │   ├── CyberGuardLoginPage.java       ← PageObject @DefaultUrl(/autenticacion)
+        │   │   ├── DashboardAlerts.java           ← Targets del listado de alertas
+        │   │   ├── LoginForm.java                 ← Targets del formulario de login
+        │   │   └── ThreatReportForm.java          ← Targets del formulario de amenazas
+        │   └── util/
+        │       └── TestData.java                  ← Constantes de datos de prueba
         └── resources/
             ├── features/
             │   └── registro.feature
-            ├── serenity.conf    ← Configuración del driver
+            ├── serenity.conf
             └── cucumber.properties
 ```
 
@@ -44,13 +58,13 @@ AUTO_FRONT_SCREENPLAY/
 
 **Screenplay:** Organiza la automatización en torno a **Actores** que poseen **Habilidades** (abilities), ejecutan **Tareas** (tasks) compuestas de **Acciones** atómicas (interactions) y responden **Preguntas** (questions) sobre el estado del sistema. Cada `Task` aplica el principio de responsabilidad única (SRP).
 
-| Componente | Responsabilidad |
-|------------|----------------|
-| `Actor` | Sujeto que ejecuta el flujo |
-| `Task` | Objetivo de negocio (ej. `ReportarAmenaza`) |
-| `Interaction` | Acción atómica de UI (click, type) |
-| `Question` | Consulta observable del estado de la UI |
-| `Target` | Localizador de elemento web (en `ui/`) |
+| Componente | Clase(s) | Responsabilidad |
+|------------|----------|----------------|
+| `Actor` | (OnStage / OnlineCast) | Sujeto que ejecuta el flujo con BrowseTheWeb |
+| `Task` | Authenticate, ReportThreat, SubmitEmptyThreatForm | Acción de negocio (SRP por clase) |
+| `Question` | SuccessMessage, ValidationMessages, AlertsVisible | Consulta observable del estado de la UI |
+| `Target` | LoginForm, ThreatReportForm, DashboardAlerts | Localizador de elemento web (en ui/) |
+| `Hook` | ScreenplayHooks | Ciclo de vida del escenario (Before/After) |
 
 ---
 
