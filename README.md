@@ -71,12 +71,20 @@ AUTO_FRONT_SCREENPLAY/
 
 ---
 
+## Repositorio bajo prueba
+
+Este proyecto automatiza pruebas sobre **CyberGuard System**:
+> 🔗 [https://github.com/aotalvaros/cyberguard-system](https://github.com/aotalvaros/cyberguard-system)
+
+---
+
 ## Prerequisitos
 
 - **Java JDK 17+** instalado y configurado en `JAVA_HOME`
 - **Google Chrome** instalado (el driver se descarga automáticamente)
-- **CyberGuard System** corriendo localmente:
+- **CyberGuard System** clonado y corriendo localmente:
   ```bash
+  git clone https://github.com/aotalvaros/cyberguard-system.git
   cd cyberguard-system
   sudo docker compose up --build
   ```
@@ -88,7 +96,7 @@ AUTO_FRONT_SCREENPLAY/
 
 1. Clonar el repositorio:
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/aotalvaros/AUTO_FRONT_SCREENPLAY.git
    cd AUTO_FRONT_SCREENPLAY
    ```
 
