@@ -27,8 +27,11 @@ public class NavigateTo implements Task {
     }
 
     public static NavigateTo theUsersPage() {
-        // El sidebar del frontend usa "Gestión Usuarios" (sin "de") — ver TEST_PLAN sección 6.2
         return instrumented(NavigateTo.class, "Gestión Usuarios", "Gestión Usuarios");
+    }
+
+    public static NavigateTo theReportThreatPage() {
+        return instrumented(NavigateTo.class, "Reportar Amenaza", "Reportar Amenaza");
     }
 
     @Override

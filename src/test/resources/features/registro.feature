@@ -5,7 +5,7 @@ Característica: Gestión de amenazas de seguridad en CyberGuard System
 @ReporteAmenaza @Positivo
   Escenario: Reporte exitoso de una amenaza con datos válidos
     Dado que el analista ha iniciado sesión en CyberGuard System
-    Cuando reporta una amenaza de tipo "Malware" con severidad "Alta" y descripción "Ransomware detectado en servidor de producción"
+    Cuando reporta una amenaza de tipo "Malware" con severidad "Alta" y descripción "Malware detectado en servidor de producción: posible ransomware"
     Entonces el sistema confirma que la amenaza fue registrada exitosamente
     Y el mensaje de confirmación incluye el identificador de la amenaza
 

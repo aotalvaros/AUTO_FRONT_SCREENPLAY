@@ -4,6 +4,7 @@ import com.cyberguard.automation.questions.AlertsVisible;
 import com.cyberguard.automation.questions.SuccessMessage;
 import com.cyberguard.automation.questions.ValidationMessages;
 import com.cyberguard.automation.tasks.Authenticate;
+import com.cyberguard.automation.tasks.NavigateTo;
 import com.cyberguard.automation.tasks.ReportThreat;
 import com.cyberguard.automation.tasks.SubmitEmptyThreatForm;
 import com.cyberguard.automation.ui.CyberGuardLoginPage;
@@ -29,7 +30,8 @@ public class RegistroAmenazaStepDefinitions {
         Actor analista = OnStage.theActorCalled("analista");
         analista.attemptsTo(
                 Open.browserOn().the(CyberGuardLoginPage.class),
-                Authenticate.withCredentials(TestData.ADMIN_USERNAME, TestData.ADMIN_PASSWORD)
+                Authenticate.withCredentials(TestData.ADMIN_USERNAME, TestData.ADMIN_PASSWORD),
+                NavigateTo.theReportThreatPage()
         );
     }
 
@@ -55,10 +57,12 @@ public class RegistroAmenazaStepDefinitions {
     @Entonces("el sistema confirma que la amenaza fue registrada exitosamente")
     public void confirmThreatReported() {
         Actor analista = OnStage.theActorInTheSpotlight();
+        // WaitUntil already throws AssertionError if element never becomes visible;
+        // the extra asksFor() check is omitted to avoid a race with the 2-second
+        // navigate(['/dashboard']) redirect that fires after success.
         analista.attemptsTo(
                 WaitUntil.the(ThreatReportForm.SUCCESS_MESSAGE, isVisible()).forNoMoreThan(15).seconds()
         );
-        assertThat(analista.asksFor(SuccessMessage.isDisplayed())).isTrue();
     }
 
     @Entonces("el sistema muestra mensajes de validación indicando los campos requeridos")
